@@ -1,11 +1,11 @@
 import sqlite3
 
 class Client:
-    def __init__(self, name, cpf, senha, senha2):
+    def __init__(self, name, cpf, senha):
         self._name = name
         self._cpf = cpf
         self._password = senha
-        self._Csenha = senha2
+        #self._Csenha = senha2
         
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
