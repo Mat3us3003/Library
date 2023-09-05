@@ -57,15 +57,7 @@ class JanelaLogin:
         self.btn_logar = tk.Button(self.frame_central, text='Entrar', command=self.cadastro)
         self.btn_logar.grid(row=8, column=0, columnspan=2,pady=20)
         self.btn_logar.config(font=("algerian", 25))
-        
-        
 
-
-
-        self.lbl_adm = tk.Label(self.frame_central, text='Entrar com Admin')
-        self.lbl_adm.grid(row=9, column=0, columnspan=2, pady=25)
-        self.lbl_adm.config(font=("Monaco", 20))
-    def carregar_imagem(self):
         self.logo = Image.open(self.logo_path)
         self.logo = self.logo.resize((200, 200)) 
 
