@@ -1,7 +1,7 @@
 import sqlite3
 
 class Manager:
-    def __init__(self,name, cpf, password, ident):
+    def __init__(self, name, cpf, password, ident):
         self._name = name
         self._cpf = cpf
         self._password = password

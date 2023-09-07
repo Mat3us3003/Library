@@ -9,6 +9,10 @@ class Rent:
     
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("INSERT INTO rent (date_start, date_end, status_rent, requester_rent) VALUES('"+self._date_start+"', '"+self._date_end+"', '"+self._status+"', '"+self._requester+"')")
+        hoje = self._date_start
+        final = self._date_end
+        stat = self._status
+        req = self._requester
+        cursor.execute("INSERT INTO rent (date_start, date_end, status_rent, requester_rent) VALUES(?,?,?,?)", (hoje, final, stat, req))
         banco.commit()
         banco.close()
