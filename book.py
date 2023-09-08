@@ -10,7 +10,6 @@ class Book:
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
         cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", (self._name, self._author, self._status, self._gender))
-        #cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES('"{self._name}"', '"{self._author}"', '"{self._status}"', '"{self._gender}"');")
         banco.commit()
         banco.close()
         

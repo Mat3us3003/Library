@@ -10,7 +10,7 @@ class Manager:
         
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("INSERT INTO manager (name_manager, cpf_manager, password_manager, identificator_manager) VALUES('"+self._name+"', '"+self._cpf+"', '"+self._password+"', '"+self._ident+"')")
+        cursor.execute("INSERT INTO manager (name_manager, cpf_manager, password_manager, identificator_manager) VALUES(?,?,?,?)", (self._name, self._cpf, self._password, self._ident))
         banco.commit()
         banco.close()
         

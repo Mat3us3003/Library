@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
@@ -114,6 +115,16 @@ class JanelaLogin:
     def cadastrar_client(self):
         c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
         self.login()
+        
+    def confirmar_manager(self):
+        if self.ent_nome.get() == '' or self.ent_cpf.get() == '' or self.ent_senha.get() == '':
+            messagebox.askokcancel("Erro", "Preencha todos os campos!")
+            self.cadastrar_client()
+        else:
+            c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
+            aviso = messagebox.askokcancel("Aviso", "Cadastro feito com sucesso!")
+            self.login()
+            
         
         
     def carregar_imagem(self):

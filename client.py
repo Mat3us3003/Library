@@ -9,7 +9,7 @@ class Client:
         
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("INSERT INTO client (name_client, cpf_client, password_client) VALUES('"+self._name+"', '"+self._cpf+"', '"+self._password+"')")
+        cursor.execute("INSERT INTO client (name_client, cpf_client, password_client) VALUES(?,?,?)", (self._name, self._cpf, self._password))
         banco.commit()
         banco.close()
         
