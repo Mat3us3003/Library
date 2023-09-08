@@ -29,7 +29,7 @@ class Janelausuario:
         self.exibir_imagens(frame_conteudo)
 
         # Criar botões dentro do mesmo frame
-        self.btn_agendar = tk.Button(frame_conteudo, text='Agendar', font=("algerian", 30))
+        self.btn_agendar = tk.Button(frame_conteudo, text='Agendar', font=("algerian", 30), command=self.agendamento)
         self.btn_agendar.grid(row=1, column=0, padx=10)
 
         self.btn_devolver = tk.Button(frame_conteudo, text='Devolver', font=("algerian", 30))
@@ -79,6 +79,58 @@ class Janelausuario:
         self.lbl_nome.grid(row=1, column=1, pady=35)
         self.lbl_nome.config(font=("Courier New", 20)) 
 
+
+
+    def agendamento(self):
+        self.limpar_grid()
+        self.janela.title('Agendar')
+        self.janela.geometry('800x800')
+        self.frame_central.pack()
+        self.logo_path = "img/biblio.png"
+        self.carregar_imagem()
+        self.exibir_imagem()
+    
+
+        self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
+        self.lbl_agen.config(font=("algerian", 35))
+        self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
+        
+        # Criando o Scrollbar
+        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela.grid(row=2, column=1, sticky=tk.NS)
+
+        # Cria as colunas com lista
+        colunas = ['titulo', 'autor', 'genero']
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw.grid(row=2, column=0, sticky=tk.NSEW)
+
+
+
+        self.tvw.heading('titulo', text='Titulo')
+        self.tvw.heading('autor', text='Autor')
+        self.tvw.heading('genero', text='Gênero')
+        self.tvw.config(height=30) 
+
+        # Crie um frame para os botões
+        frame_botoes = tk.Frame(self.frame_central)
+        frame_botoes.grid(row=3, column=0, pady=10)
+
+        btn_selecionar = tk.Button(frame_botoes, text='Selecionar',font=("algerian", 30))
+        btn_selecionar.grid(row=0, column=0, padx=150)
+
+        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30))
+        btn_confirmar.grid(row=0, column=1, padx=150)
+    
+    def carregar_imagem(self):
+        self.logo = Image.open(self.logo_path)
+        self.logo = self.logo.resize((80, 80)) 
+
+    def exibir_imagem(self):
+        self.logo_tk = ImageTk.PhotoImage(self.logo)
+        self.label_logo = tk.Label(self.frame_central, image=self.logo_tk)
+        self.label_logo.grid(row=0, column=0, columnspan=2,)
+        
+        
     def carregar_imagens(self):
         self.images_tk = []
         for logos in self.logos:
