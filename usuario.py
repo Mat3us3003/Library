@@ -1,5 +1,7 @@
+import sqlite3
 import tkinter as tk
 from tkinter import ttk, Menu
+from tkinter import messagebox
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
 
@@ -109,17 +111,60 @@ class Janelausuario:
         self.tvw.heading('titulo', text='Titulo')
         self.tvw.heading('autor', text='Autor')
         self.tvw.heading('genero', text='Gênero')
-        self.tvw.config(height=30) 
+        self.tvw.config(height=30)
+        
+        #Colunas
+        self.tvw.column('titulo', minwidth=30, width=30)
+        self.tvw.column('autor', minwidth=100, width=200)
+        self.tvw.column('genero', minwidth=100, width=200)
+        
+        #Linhas
+        self.atualizar_agendamento()
 
         # Crie um frame para os botões
         frame_botoes = tk.Frame(self.frame_central)
         frame_botoes.grid(row=3, column=0, pady=10)
 
-        btn_selecionar = tk.Button(frame_botoes, text='Selecionar',font=("algerian", 30))
+        btn_selecionar = tk.Button(frame_botoes, text='Selecionar',font=("algerian", 30), command=self.selecionar)
         btn_selecionar.grid(row=0, column=0, padx=150)
 
-        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30))
+        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30), command=self.confirmar)
         btn_confirmar.grid(row=0, column=1, padx=150)
+        
+    
+    def listar(self, sql):
+        banco = sqlite3.connect('libraryDB.db')
+        cursor = banco.cursor()
+        cursor.execute(sql)
+        resultado = cursor.fetchall() 
+        banco.close()
+        return resultado
+        
+        
+    def atualizar_agendamento(self):
+        items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
+        for i in items:
+            self.tvw.delete(i)
+        sql_listar_contas = 'SELECT name_book, author_book, gender_book FROM book;'
+        dados = self.listar(sql_listar_contas)
+        for linha in dados:
+            self.tvw.insert('', tk.END, values=linha)
+            
+    lista = []    
+    def selecionar(self):
+        if len(self.lista)<3:
+            self.selecao = self.tvw.selection()
+            self.seleciona = self.tvw.item(self.selecao, "values")
+            self.lista.append(self.seleciona)
+            messagebox.askokcancel("Sucesso", "Livro adicionado!")
+        else:
+            messagebox.askokcancel("Erro", "Limite de livros atingido!")
+        print(self.lista)
+    
+    def confirmar(self):
+        print(self.lista)
+            
+        
     
     def carregar_imagem(self):
         self.logo = Image.open(self.logo_path)

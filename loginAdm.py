@@ -200,7 +200,7 @@ class JanelaLogin:
         else:
             print(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get(), self.ent_ident.get())
             c = Manager(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get(), self.ent_ident.get())
-            self.login_manager()
+            
             
     def confirmar_book(self):
         if self.ent_titulo.get() == '' or self.ent_author.get() == '' or self.cbx_gender.get() == '':
@@ -238,7 +238,7 @@ class JanelaLogin:
         self.tvw.column('status_rent', minwidth=200, width=200)
         self.tvw.column('requester_rent', minwidth=200, width=200)
         #Linhas
-        self.atualizar_treeview()
+        self.atualizar_rent()
         # #Barra de rolagem
         # scb = ttk.Scrollbar(self.janela, orient=tk.VERTICAL,command=self.tvw.yview)
         # scb.grid(row=0, column=1, sticky='ns')
@@ -260,7 +260,7 @@ class JanelaLogin:
         self.btn_devolvido.config(font=("algerian", 20))
         
         
-    def atualizar_treeview(self):
+    def atualizar_rent(self):
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
