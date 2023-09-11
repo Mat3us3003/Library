@@ -9,22 +9,14 @@ import time
 from book import Book
 from client import Client
 
-class JanelaLogin:
+class LoginAdm:
     def __init__(self, janela):
-        self.janela = janela
-        # self.janela.geometry('800x800')
-        self.style = Style(theme="vapor") 
         
-                
-        self.frame_central = tk.Frame(self.janela)
-        self.frame_central.pack(expand=True)
 
         # self.logo_path = "img/biblio.png"
         # self.carregar_imagem()
         # self.exibir_imagem()
-        
-        
-        self.inicio()
+        self.inicio
     
     def limpar_grid(self):
         for widget in self.frame_central.winfo_children():
@@ -60,6 +52,13 @@ class JanelaLogin:
 
     
     def inicio(self):
+        
+        # self.janela.geometry('800x800')
+        self.style = Style(theme="vapor") 
+        
+                
+        self.frame_central = tk.Frame(self.janela)
+        self.frame_central.pack(expand=True)
         self.limpar_grid()
         # Criar um frame para imagens e botões com espaçamento pady e padx
         frame_conteudo = tk.Frame(self.frame_central, pady=150, padx=20)
@@ -303,6 +302,6 @@ class JanelaLogin:
        
         
         
-janela = tk.Tk()
-app = JanelaLogin(janela)
-janela.mainloop()
+# janela = tk.Tk()
+# app = LoginAdm(janela)
+# janela.mainloop()

@@ -3,8 +3,8 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
-import time
 from client import Client
+from loginAdm import LoginAdm
 
 class JanelaLogin:
     def __init__(self, janela):
@@ -27,11 +27,8 @@ class JanelaLogin:
         for widget in self.frame_central.winfo_children():
             widget.grid_forget()
 
-    #time.sleep(2)
-
     def login(self):
         self.limpar_grid
-        
         self.logo_path = "img/usuario.png"
         self.carregar_imagem()
         self.exibir_imagem()
@@ -55,12 +52,22 @@ class JanelaLogin:
         self.ent_senha.grid(row=6, column=1)
         self.ent_senha.config(font=("Courier New", 28)) 
 
-        self.btn_logar = tk.Button(self.frame_central, text='Entrar', command=self.cadastro)
+        self.btn_logar = tk.Button(self.frame_central, text='Entrar', command=self.logar)
         self.btn_logar.grid(row=8, column=0, columnspan=2,pady=20)
         self.btn_logar.config(font=("algerian", 25))
+        
+        self.btn_cadastrar = tk.Button(self.frame_central, text='Cadastrar', command=self.cadastro)
+        self.btn_cadastrar.grid(row=9, column=0, columnspan=2,pady=20)
+        self.btn_cadastrar.config(font=("algerian", 25))
 
         self.logo = Image.open(self.logo_path)
         self.logo = self.logo.resize((200, 200)) 
+        
+    def logar(self):
+        if self.ent_usuario.get() == '987654321':
+            print(1)
+            LoginAdm(self.janela)
+        print(2)
 
     def exibir_imagem(self):
         self.logo_tk = ImageTk.PhotoImage(self.logo)
