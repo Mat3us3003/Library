@@ -1,9 +1,11 @@
+import datetime
 import sqlite3
 import tkinter as tk
 from tkinter import ttk, Menu
 from tkinter import messagebox
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
+from rent import Rent
 
 
 class Janelausuario:
@@ -156,13 +158,64 @@ class Janelausuario:
             self.selecao = self.tvw.selection()
             self.seleciona = self.tvw.item(self.selecao, "values")
             self.lista.append(self.seleciona)
-            messagebox.askokcancel("Sucesso", "Livro adicionado!")
+            if self.lista == ['']:
+                messagebox.askokcancel("Erro", "Selecione um livro!")
+            else:
+                messagebox.askokcancel("Sucesso", "Livro adicionado!")
         else:
             messagebox.askokcancel("Erro", "Limite de livros atingido!")
         print(self.lista)
     
     def confirmar(self):
-        print(self.lista)
+        self.limpar_grid()
+        self.janela.title('Confirmar empréstimo')
+        #self.janela.geometry('800x800')
+        self.frame_central.pack()
+        self.logo_path = "img/biblio.png"
+        self.carregar_imagem()
+        self.exibir_imagem()
+    
+
+        self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
+        self.lbl_agen.config(font=("algerian", 35))
+        self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
+        
+        # Criando o Scrollbar
+        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela.grid(row=2, column=1, sticky=tk.NS)
+
+        # Cria as colunas com lista
+        colunas = ['titulo', 'autor', 'genero']
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw.grid(row=2, column=0, sticky=tk.NSEW)
+
+
+
+        self.tvw.heading('titulo', text='Titulo')
+        self.tvw.heading('autor', text='Autor')
+        self.tvw.heading('genero', text='Gênero')
+        self.tvw.config(height=30)
+        
+        #Colunas
+        self.tvw.column('titulo', minwidth=30, width=30)
+        self.tvw.column('autor', minwidth=100, width=200)
+        self.tvw.column('genero', minwidth=100, width=200)
+        
+        #Linhas
+        for i in self.lista:
+            self.tvw.insert('', tk.END, values=(i))
+
+        # Crie um frame para os botões
+        frame_botoes = tk.Frame(self.frame_central)
+        frame_botoes.grid(row=3, column=0, pady=10)
+
+        btn_confirmar = tk.Button(frame_botoes, text='Pedir', font=("algerian", 30), command=self.pedir)
+        btn_confirmar.grid(row=0, column=1, padx=150)
+        
+    
+    def pedir(self):
+        r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), 'pendente')
+        
             
         
     
