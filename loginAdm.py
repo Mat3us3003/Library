@@ -2,21 +2,25 @@ from tkinter import Menu, messagebox
 from menager import Manager
 import sqlite3
 import tkinter as tk
-import ttkbootstrap as ttk
+import ttkbootstrap as ttkbootstrap
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
+from tkinter import ttk
 import time
 from book import Book
 from client import Client
 
 class LoginAdm:
-    def __init__(self, janela):
-        
-
+    def __init__(self):
+        self.janela = ttkbootstrap.Window()
+        # self.janela = janela
+        self.frame_central = tk.Frame(self.janela)
+        self.frame_central.pack(expand=True)
         # self.logo_path = "img/biblio.png"
         # self.carregar_imagem()
         # self.exibir_imagem()
-        self.inicio
+        self.inicio()
+        
     
     def limpar_grid(self):
         for widget in self.frame_central.winfo_children():
@@ -56,9 +60,8 @@ class LoginAdm:
         # self.janela.geometry('800x800')
         self.style = Style(theme="vapor") 
         
-                
-        self.frame_central = tk.Frame(self.janela)
-        self.frame_central.pack(expand=True)
+        #self.janela = ttk.Window()
+        
         self.limpar_grid()
         # Criar um frame para imagens e botões com espaçamento pady e padx
         frame_conteudo = tk.Frame(self.frame_central, pady=150, padx=20)
@@ -176,7 +179,7 @@ class LoginAdm:
         self.lbl_gender.config(font=("Courier New", 28))
 
         lista = ['Romance', 'Aventura', 'Terror', 'Comédia', 'Infantil']
-        self.cbx_gender = ttk.Combobox(self.frame_central, values=lista, state='readonly')
+        self.cbx_gender = ttk.Combobox(self.frame_central, values=lista)
         self.cbx_gender.config(font=("Courier New", 28)) 
         self.cbx_gender.grid(row=8, column=1, sticky="w")
         
@@ -187,7 +190,7 @@ class LoginAdm:
         self.btn_cadastrar_book.grid(row=0, column=1, pady=20, padx=10)
         self.btn_cadastrar_book.config(font=("algerian", 28))
 
-        self.btn_voltar = tk.Button(self.frm_botoes, text='Voltar', command=self.inicio)
+        self.btn_voltar = tk.Button(self.frm_botoes, text='Voltar')
         self.btn_voltar.grid(row=0, column=0, pady=20, padx=10)
         self.btn_voltar.config(font=("algerian", 28))
 
@@ -282,7 +285,7 @@ class LoginAdm:
         cursor.execute("UPDATE rent SET status_rent='Aprovado' WHERE id_rent=1")
         banco.commit()
         banco.close()
-        self.atualizar_treeview()
+        self.atualizar_rent()
     
     def negar(self):
         banco = sqlite3.connect('libraryDB.db')
@@ -290,7 +293,7 @@ class LoginAdm:
         cursor.execute("UPDATE rent SET status_rent='Negado' WHERE id_rent=1")
         banco.commit()
         banco.close()
-        self.atualizar_treeview()
+        self.atualizar_rent()
         
     def devolvido(self):
         banco = sqlite3.connect('libraryDB.db')
@@ -298,7 +301,7 @@ class LoginAdm:
         cursor.execute("UPDATE rent SET status_rent='Devolvido' WHERE id_rent=1")
         banco.commit()
         banco.close()
-        self.atualizar_treeview()
+        self.atualizar_rent()
        
         
         

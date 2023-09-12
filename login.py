@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import ttkbootstrap as ttk
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
@@ -66,7 +67,11 @@ class JanelaLogin:
     def logar(self):
         if self.ent_usuario.get() == '987654321':
             print(1)
-            LoginAdm(self.janela)
+            self.janela.destroy()
+            LoginAdm()
+            
+            #telaAdmin.inicio(self.janela)
+            
         print(2)
 
     def exibir_imagem(self):
@@ -145,6 +150,6 @@ class JanelaLogin:
        
         
         
-janela = tk.Tk()
+janela = ttk.Window()
 app = JanelaLogin(janela)
 janela.mainloop()
