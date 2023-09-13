@@ -96,6 +96,7 @@ class Janelausuario:
 
         self.lbl_agen = tk.Label(self.frame_central, text='Empréstimo')
         self.lbl_agen.config(font=("algerian", 35))
+
         self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)
         frame_pesquisa = tk.Frame(self.frame_central)
         frame_pesquisa.grid(row=2, column=0, columnspan=3)
@@ -108,12 +109,12 @@ class Janelausuario:
         self.btn_pesquisar.grid(row=2, column=2)  
         
         # Criando o Scrollbar
-        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle="info-round")
         scb_tabela.grid(row=3, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
         colunas = ['titulo', 'autor', 'genero']
-        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='info')
         self.tvw.grid(row=3, column=0, sticky=tk.NSEW)
 
         self.tvw.heading('titulo', text='Titulo')
@@ -200,9 +201,9 @@ class Janelausuario:
         self.tvw.config(height=30)
         
         #Colunas
-        self.tvw.column('titulo', minwidth=30, width=30)
-        self.tvw.column('autor', minwidth=100, width=200)
-        self.tvw.column('genero', minwidth=100, width=200)
+        self.tvw.column('titulo')
+        self.tvw.column('autor')
+        self.tvw.column('genero')
         
         #Linhas
         for i in self.lista:
@@ -260,12 +261,12 @@ class Janelausuario:
         self.lbl_dev.grid(row=2, column=0, columnspan=2, pady=15)  
                 
         # Criando o Scrollbar
-        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle="info-round")
         scb_tabela.grid(row=3, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
         colunas = ['titulo', 'autor', 'genero','prazo']
-        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='info')
         self.tvw.grid(row=3, column=0, sticky=tk.NSEW)
 
 
@@ -287,6 +288,6 @@ class Janelausuario:
         btn_confirmar.grid(row=0, column=1, padx=150)
 
 
-# janela = tk.Tk()
-# app = Janelausuario(janela)
-# janela.mainloop()
+janela = tk.Tk()
+app = Janelausuario(janela)
+janela.mainloop()

@@ -294,14 +294,22 @@ class LoginAdm:
         
     
     def cadastro_book(self):
-        
         self.limpar_grid() 
-        
+        self.janela.title('Cadastro')
+        self.img_path = "img/biblio.png"
+        self.carregar_img()
+        self.exibir_img()
+
+
+        self.lbl_cadastro = tk.Label(self.frame_central, text='Cadastro')
+        self.lbl_cadastro.config(font=("algerian", 45))
+        self.lbl_cadastro.grid(row=1, column=0, columnspan=2, pady=15)
+
         self.lbl_titulo = tk.Label(self.frame_central, text='Título:')
         self.lbl_titulo.grid(row=3, column=1, sticky="w",pady=20)
         self.lbl_titulo.config(font=("Courier New", 28))
         
-        self.ent_titulo = tk.Entry(self.frame_central, width=50 )
+        self.ent_titulo = ttk.Entry(self.frame_central, width=50,bootstyle="warning")
         self.ent_titulo.grid(row=4, column=1)
         self.ent_titulo.config(font=("Courier New", 28))
 
@@ -309,7 +317,7 @@ class LoginAdm:
         self.lbl_author.grid(row=5, column=1, sticky="w",pady=20)
         self.lbl_author.config(font=("Courier New", 28))  
 
-        self.ent_author = tk.Entry(self.frame_central, width=50 )
+        self.ent_author = ttk.Entry(self.frame_central, width=50,bootstyle="warning" )
         self.ent_author.grid(row=6, column=1)
         self.ent_author.config(font=("Courier New", 28))
        
@@ -318,7 +326,7 @@ class LoginAdm:
         self.lbl_gender.config(font=("Courier New", 28))
 
         lista = ['Romance', 'Aventura', 'Terror', 'Comédia', 'Infantil']
-        self.cbx_gender = ttk.Combobox(self.frame_central, values=lista)
+        self.cbx_gender = ttk.Combobox(self.frame_central, values=lista,bootstyle="warning")
         self.cbx_gender.config(font=("Courier New", 28)) 
         self.cbx_gender.grid(row=8, column=1, sticky="w")
         
@@ -326,12 +334,17 @@ class LoginAdm:
         self.frm_botoes.grid(row=11, column=0, columnspan=2)
 
         self.btn_cadastrar_book = tk.Button(self.frm_botoes, text='Cadastrar Livro', command=self.confirmar_book)
-        self.btn_cadastrar_book.grid(row=0, column=1, pady=20, padx=10)
+        self.btn_cadastrar_book.grid(row=0, column=0, pady=20, padx=10)
         self.btn_cadastrar_book.config(font=("algerian", 28))
 
-        self.btn_voltar = tk.Button(self.frm_botoes, text='Voltar')
-        self.btn_voltar.grid(row=0, column=0, pady=20, padx=10)
-        self.btn_voltar.config(font=("algerian", 28))
+    def carregar_img(self):
+        self.img= Image.open(self.img_path)
+        self.img = self.img.resize((100, 100)) 
+
+    def exibir_img(self):
+        self.img_tk = ImageTk.PhotoImage(self.img)
+        self.label_img = tk.Label(self.frame_central, image=self.img_tk)
+        self.label_img.grid(row=0, column=0, columnspan=2,)
 
         
     def confirmar_manager(self):
@@ -363,8 +376,11 @@ class LoginAdm:
         
     def rent(self):
         self.limpar_grid()
+        scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle="warning-round")
+        scb_tabela.grid(row=0, column=1, sticky=tk.NS)
+
         colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent')
-        self.tvw = ttk.Treeview(self.frame_central, columns=colunas, height=5, show='headings')
+        self.tvw = ttk.Treeview(self.frame_central, columns=colunas, height=5, show='headings',bootstyle='warning')
         self.tvw.grid(row=0,column=0)
         #Cabeçalho
         self.tvw.heading('id', text='ID')
@@ -373,31 +389,29 @@ class LoginAdm:
         self.tvw.heading('status_rent', text='Status')
         self.tvw.heading('requester_rent', text='Solicitante')
         #Colunas
-        self.tvw.column('id', minwidth=30, width=30)
-        self.tvw.column('date_start', minwidth=100, width=200)
-        self.tvw.column('date_end', minwidth=100, width=200)
-        self.tvw.column('status_rent', minwidth=200, width=200)
-        self.tvw.column('requester_rent', minwidth=200, width=200)
+        self.tvw.column('id')
+        self.tvw.column('date_start')
+        self.tvw.column('date_end')
+        self.tvw.column('status_rent')
+        self.tvw.column('requester_rent')
+        self.tvw.config(height=25)
         #Linhas
         self.atualizar_rent()
-        # #Barra de rolagem
-        # scb = ttk.Scrollbar(self.janela, orient=tk.VERTICAL,command=self.tvw.yview)
-        # scb.grid(row=0, column=1, sticky='ns')
-        # self.tvw.config(yscrollcommand=scb.set)
+
         
         self.frm_botoes = tk.Frame(self.frame_central)
         self.frm_botoes.grid(row=1, column=0)
         
         self.btn_aceitar = tk.Button(self.frm_botoes, text='Aceitar', command=self.aceitar)
-        self.btn_aceitar.grid(row=0, column=0, pady=20, padx=10)
+        self.btn_aceitar.grid(row=0, column=0, pady=20, padx=20)
         self.btn_aceitar.config(font=("algerian", 20))
         
         self.btn_negar = tk.Button(self.frm_botoes, text='Negar', command=self.negar)
-        self.btn_negar.grid(row=1, column=0, pady=20, padx=10)
+        self.btn_negar.grid(row=0, column=1, padx=20)
         self.btn_negar.config(font=("algerian", 20))
         
         self.btn_devolvido = tk.Button(self.frm_botoes, text='Devolvido', command=self.devolvido)
-        self.btn_devolvido.grid(row=2, column=0, pady=20, padx=10)
+        self.btn_devolvido.grid(row=0, column=2, padx=20)
         self.btn_devolvido.config(font=("algerian", 20))
         
         
@@ -552,9 +566,9 @@ class LoginAdm:
         self.tvw.config(height=30)
         
         #Colunas
-        self.tvw.column('titulo', minwidth=30, width=30)
-        self.tvw.column('autor', minwidth=100, width=200)
-        self.tvw.column('genero', minwidth=100, width=200)
+        self.tvw.column('titulo')
+        self.tvw.column('autor')
+        self.tvw.column('genero')
         
         #Linhas
         self.atualizar_agendamento()
@@ -633,9 +647,9 @@ class LoginAdm:
         self.tvw.config(height=30)
         
         #Colunas
-        self.tvw.column('titulo', minwidth=30, width=30)
-        self.tvw.column('autor', minwidth=100, width=200)
-        self.tvw.column('genero', minwidth=100, width=200)
+        self.tvw.column('titulo')
+        self.tvw.column('autor')
+        self.tvw.column('genero')
         
         #Linhas
         for i in self.lista:
@@ -662,12 +676,12 @@ class LoginAdm:
         self.tvw.heading('requester_rent', text='Solicitante')
         self.tvw.heading('name_book', text='Livros')
         #Colunas
-        self.tvw.column('id', minwidth=30, width=30)
-        self.tvw.column('date_start', minwidth=100, width=200)
-        self.tvw.column('date_end', minwidth=100, width=200)
-        self.tvw.column('status_rent', minwidth=200, width=200)
-        self.tvw.column('requester_rent', minwidth=200, width=200)
-        self.tvw.column('name_book', minwidth=200, width=200)
+        self.tvw.column('id')
+        self.tvw.column('date_start')
+        self.tvw.column('date_end')
+        self.tvw.column('status_rent')
+        self.tvw.column('requester_rent')
+        self.tvw.column('name_book')
         #Linhas
         self.atualizar_prorrogar()
         # #Barra de rolagem
