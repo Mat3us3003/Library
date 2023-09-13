@@ -480,7 +480,7 @@ class LoginAdm:
         self.exibir_imagens(frame_conteudo)
 
         # Criar botões dentro do mesmo frame
-        self.btn_agendar = tk.Button(frame_conteudo, text='Agendar', font=("algerian", 30), command=self.agendamento)
+        self.btn_agendar = tk.Button(frame_conteudo, text='Empréstimo', font=("algerian", 30), command=self.emprestimo)
         self.btn_agendar.grid(row=1, column=0, padx=10)
 
         self.btn_devolver = tk.Button(frame_conteudo, text='Devolver', font=("algerian", 30))
@@ -710,6 +710,70 @@ class LoginAdm:
     
     def pedir(self):
         r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), 'pendente')
+        
+        
+    def emprestimo(self):
+        self.limpar_grid()
+        self.janela.title('Empréstimo')
+        self.janela.geometry('800x800')
+        self.frame_central.pack()
+        self.logo_path = "img/biblio.png"
+        self.carregar_imagem()
+        self.exibir_imagem()
+    
+
+        self.lbl_agen = tk.Label(self.frame_central, text='Empréstimo')
+        self.lbl_agen.config(font=("algerian", 35))
+        self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)
+        frame_pesquisa = tk.Frame(self.frame_central)
+        frame_pesquisa.grid(row=2, column=0, columnspan=3)
+
+
+        self.entry_pesquisa = tk.Entry(frame_pesquisa, font=("Courier New", 19))
+        self.entry_pesquisa.grid(row=2, column=1, padx=10, pady=10)
+
+        self.btn_pesquisar = tk.Button(frame_pesquisa, text='Pesquisar', font=("algerian", 15), command=self.pesquisar)
+        self.btn_pesquisar.grid(row=2, column=2)  
+        
+        # Criando o Scrollbar
+        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela.grid(row=3, column=1, sticky=tk.NS)
+
+        # Cria as colunas com lista
+        colunas = ['titulo', 'autor', 'genero']
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw.grid(row=3, column=0, sticky=tk.NSEW)
+
+        self.tvw.heading('titulo', text='Titulo')
+        self.tvw.heading('autor', text='Autor')
+        self.tvw.heading('genero', text='Gênero')
+        self.tvw.config(height=25)
+        
+        #Linhas
+        self.atualizar_agendamento()
+
+        # Crie um frame para os botões
+        frame_botoes = tk.Frame(self.frame_central)
+        frame_botoes.grid(row=4, column=0, pady=10)
+
+        btn_selecionar = tk.Button(frame_botoes, text='Selecionar',font=("algerian", 30), command=self.selecionar)
+        btn_selecionar.grid(row=0, column=0, padx=150)
+        
+        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30), command=self.confirmar)
+     
+        btn_confirmar.grid(row=0, column=1, padx=150)
+        
+    def pesquisar(self):
+        self.texto_pesquisa = self.entry_pesquisa.get() 
+        items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
+        for i in items:
+            self.tvw.delete(i)
+        sql_listar_contas = 'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client, b.name_book FROM rent r, client c, book b WHERE r.requester_rent=c.id_client AND b.status_book=="Aprovado" AND LIKE %{self.texto_pesquisa}%'
+        dados = self.listar(sql_listar_contas)
+        for linha in dados:
+            self.tvw.insert('', tk.END, values=linha)
+        
+    
         
 # janela = tk.Tk()
 # app = LoginAdm(janela)
