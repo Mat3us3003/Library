@@ -33,10 +33,10 @@ class Janelausuario:
         self.exibir_imagens(frame_conteudo)
 
         # Criar botões dentro do mesmo frame
-        self.btn_agendar = tk.Button(frame_conteudo, text='Agendar', font=("algerian", 30), command=self.agendamento)
+        self.btn_agendar = tk.Button(frame_conteudo, text='Empréstimo', font=("algerian", 30), command=self.emprestimo)
         self.btn_agendar.grid(row=1, column=0, padx=10)
 
-        self.btn_devolver = tk.Button(frame_conteudo, text='Devolver', font=("algerian", 30))
+        self.btn_devolver = tk.Button(frame_conteudo, text='Devolver', font=("algerian", 30),command=self.devolucao)
         self.btn_devolver.grid(row=1, column=1, padx=10)
 
         self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30))
@@ -77,16 +77,16 @@ class Janelausuario:
         self.style = Style(theme="solar") 
         self.janela.geometry('800x800')
 
-        self.lbl_nome = tk.Label(self.frame_central, text='Bem-vindo à nossa Biblioteca Virtual!\n\n Aqui, acreditamos que a leitura é uma jornada que transcende as páginas de um livro e \n se transforma em uma experiência única e inspiradora. Nossa missão é criar um espaço\n onde a literatura se conecta com a vida real, permitindo que você agende e mergulhe\n nas histórias que tanto ama.\n\n Imagine a sensação de folhear as páginas de um livro físico, sentir o cheiro das páginas\n e ser transportado para mundos desconhecidos. Através da nossa biblioteca virtual, você \n pode não apenas explorar uma vasta coleção de livros, mas também agendar um momento especial\n para pegar um exemplar físico em nossa biblioteca.\n\nAo agendar um livro conosco, você está comprometendo-se não apenas a ler, mas a viver \naventuras, conhecer personagens inspiradores e explorar novas ideias. Cada livro que você \n escolhe representa uma jornada que enriquecerá sua mente e alimentará sua alma.\n\nEntão, reserve um momento, escolha seu livro e agende sua visita à nossa biblioteca. \nDeixe-se inspirar por cada página, e saiba que, com cada agendamento, você está \nescrevendo mais um capítulo da sua própria história literária. Estamos aqui para \ncelebrar essa jornada com você e continuar a inspirar a paixão pela leitura \nem todas as suas formas.')
+        self.lbl_nome = tk.Label(self.frame_central, text='Bem-vindo à nossa Biblioteca Virtual!\n\n Aqui, acreditamos que a leitura é uma jornada que transcende as páginas de um livro e \n se transforma em uma experiência única e inspiradora. Nossa missão é criar um espaço\n onde a literatura se conecta com a vida real, permitindo que você agende e mergulhe\n nas histórias que tanto ama.\n\n Imagine a sensação de folhear as páginas de um livro físico, sentir o cheiro das páginas\n e ser transportado para mundos desconhecidos. Através da nossa biblioteca virtual, você \n pode não apenas explorar uma vasta coleção de livros, mas também agendar um momento especial\n para pegar um exemplar físico em nossa biblioteca.\n\nAo agendar um livro conosco, você está comprometendo-se não apenas a ler, mas a viver \naventuras, conhecer personagens inspiradores e explorar novas ideias. Cada livro que você \n escolhe representa uma jornada que enriquecerá sua mente e alimentará sua alma.\n\nEntão, reserve um momento, escolha seu livro e agende sua visita à nossa biblioteca. \nDeixe-se inspirar por cada página, e saiba que, com cada emprestimo, você está \nescrevendo mais um capítulo da sua própria história literária. Estamos aqui para \ncelebrar essa jornada com você e continuar a inspirar a paixão pela leitura \nem todas as suas formas.')
         
         self.lbl_nome.grid(row=1, column=1, pady=35)
         self.lbl_nome.config(font=("Courier New", 20)) 
 
 
 
-    def agendamento(self):
+    def emprestimo(self):
         self.limpar_grid()
-        self.janela.title('Agendar')
+        self.janela.title('Empréstimo')
         self.janela.geometry('800x800')
         self.frame_central.pack()
         self.logo_path = "img/biblio.png"
@@ -94,44 +94,48 @@ class Janelausuario:
         self.exibir_imagem()
     
 
-        self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
+        self.lbl_agen = tk.Label(self.frame_central, text='Empréstimo')
         self.lbl_agen.config(font=("algerian", 35))
-        self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
+        self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)
+        frame_pesquisa = tk.Frame(self.frame_central)
+        frame_pesquisa.grid(row=2, column=0, columnspan=3)
+
+
+        self.entry_pesquisa = tk.Entry(frame_pesquisa, font=("Courier New", 19))
+        self.entry_pesquisa.grid(row=2, column=1, padx=10, pady=10)
+
+        self.btn_pesquisar = tk.Button(frame_pesquisa, text='Pesquisar', font=("algerian", 15))
+        self.btn_pesquisar.grid(row=2, column=2)  
         
         # Criando o Scrollbar
         scb_tabela = tk.Scrollbar(self.frame_central)
-        scb_tabela.grid(row=2, column=1, sticky=tk.NS)
+        scb_tabela.grid(row=3, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
         colunas = ['titulo', 'autor', 'genero']
         self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
-        self.tvw.grid(row=2, column=0, sticky=tk.NSEW)
-
-
+        self.tvw.grid(row=3, column=0, sticky=tk.NSEW)
 
         self.tvw.heading('titulo', text='Titulo')
         self.tvw.heading('autor', text='Autor')
         self.tvw.heading('genero', text='Gênero')
-        self.tvw.config(height=30)
-        
-        #Colunas
-        self.tvw.column('titulo', minwidth=30, width=30)
-        self.tvw.column('autor', minwidth=100, width=200)
-        self.tvw.column('genero', minwidth=100, width=200)
+        self.tvw.config(height=25)
         
         #Linhas
-        self.atualizar_agendamento()
+        self.atualizar_emprestimo()
 
         # Crie um frame para os botões
         frame_botoes = tk.Frame(self.frame_central)
-        frame_botoes.grid(row=3, column=0, pady=10)
+        frame_botoes.grid(row=4, column=0, pady=10)
 
         btn_selecionar = tk.Button(frame_botoes, text='Selecionar',font=("algerian", 30), command=self.selecionar)
         btn_selecionar.grid(row=0, column=0, padx=150)
-
-        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30), command=self.confirmar)
-        btn_confirmar.grid(row=0, column=1, padx=150)
         
+        btn_confirmar = tk.Button(frame_botoes, text='Confirmar', font=("algerian", 30), command=self.confirmar)
+     
+        btn_confirmar.grid(row=0, column=1, padx=150)
+    def pesquisar(self):
+        texto_pesquisa = self.entry_pesquisa.get() 
     
     def listar(self, sql):
         banco = sqlite3.connect('libraryDB.db')
@@ -142,7 +146,7 @@ class Janelausuario:
         return resultado
         
         
-    def atualizar_agendamento(self):
+    def atualizar_emprestimo(self):
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
@@ -239,6 +243,48 @@ class Janelausuario:
         for i, image_tk in enumerate(self.images_tk):
             label = tk.Label(frame, image=image_tk)
             label.grid(row=0, column=i, padx=15)
+    
+    def devolucao(self):
+        self.limpar_grid()
+        self.janela.title('Devolver')
+        self.janela.geometry('800x800')
+        self.frame_central.pack()
+        self.logo_path = "img/biblio.png"
+        self.carregar_imagem()
+        self.exibir_imagem()
+    
+
+
+        self.lbl_dev = tk.Label(self.frame_central, text='Devolução')
+        self.lbl_dev.config(font=("algerian", 35))
+        self.lbl_dev.grid(row=2, column=0, columnspan=2, pady=15)  
+                
+        # Criando o Scrollbar
+        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela.grid(row=3, column=1, sticky=tk.NS)
+
+        # Cria as colunas com lista
+        colunas = ['titulo', 'autor', 'genero','prazo']
+        self.tvw = ttk.Treeview(self.frame_central, show='headings', columns=colunas,bootstyle='success')
+        self.tvw.grid(row=3, column=0, sticky=tk.NSEW)
+
+
+
+        self.tvw.heading('titulo', text='Titulo')
+        self.tvw.heading('autor', text='Autor')
+        self.tvw.heading('genero', text='Gênero')
+        self.tvw.heading('prazo', text='Prazo')
+        self.tvw.config(height=30)
+        
+        #Linhas
+        self.atualizar_emprestimo()
+
+        # Crie um frame para os botões
+        frame_botoes = tk.Frame(self.frame_central)
+        frame_botoes.grid(row=4, column=0, pady=10)
+
+        btn_confirmar = tk.Button(frame_botoes, text='Devolver', font=("algerian", 30))
+        btn_confirmar.grid(row=0, column=1, padx=150)
 
 
 # janela = tk.Tk()
