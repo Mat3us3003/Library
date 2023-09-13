@@ -73,7 +73,6 @@ class Janelausuario:
 
     def sobre(self):
         self.limpar_grid()
-        self.janela = janela
         self.frame_central.pack()
         self.style = Style(theme="solar") 
         self.janela.geometry('800x800')
@@ -288,6 +287,6 @@ class Janelausuario:
         btn_confirmar.grid(row=0, column=1, padx=150)
 
 
-janela = tk.Tk()
-app = Janelausuario(janela)
-janela.mainloop()
+# janela = tk.Tk()
+# app = Janelausuario(janela)
+# janela.mainloop()

@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+from tkinter import ttk
 import ttkbootstrap as ttk
 from ttkbootstrap.style import Style
 from PIL import Image, ImageTk
 from client import Client
 from loginAdm import LoginAdm
+from usuario import Janelausuario
 
 class JanelaLogin:
     def __init__(self, janela):
@@ -61,12 +63,19 @@ class JanelaLogin:
         self.btn_cadastrar.config(font=("algerian", 25))
 
         self.logo = Image.open(self.logo_path)
-        self.logo = self.logo.resize((200, 200)) 
+        self.logo = self.logo.resize((200, 200))
+        
         
     def logar(self):
         if self.ent_usuario.get() == '987654321':
             print(1)
-            LoginAdm(self.janela)
+            #self.janela.destroy()
+            self.limpar_grid()
+            telaAdmin = LoginAdm()
+            telaAdmin.iniciarAdmin(self.janela)
+        else:
+            Janelausuario(self.janela)
+            
         print(2)
 
     def exibir_imagem(self):
@@ -145,6 +154,6 @@ class JanelaLogin:
        
         
         
-janela = tk.Tk()
+janela = ttk.Window()
 app = JanelaLogin(janela)
 janela.mainloop()
