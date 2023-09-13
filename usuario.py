@@ -73,7 +73,6 @@ class Janelausuario:
 
     def sobre(self):
         self.limpar_grid()
-        self.janela = janela
         self.frame_central.pack()
         self.style = Style(theme="solar") 
         self.janela.geometry('800x800')
@@ -242,6 +241,6 @@ class Janelausuario:
             label.grid(row=0, column=i, padx=15)
 
 
-janela = tk.Tk()
-app = Janelausuario(janela)
-janela.mainloop()
+# janela = tk.Tk()
+# app = Janelausuario(janela)
+# janela.mainloop()
