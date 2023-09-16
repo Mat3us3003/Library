@@ -11,6 +11,7 @@ from ttkbootstrap.window import Window
 from book import Book
 from client import Client
 from rent import Rent
+from BD.conexao import criar_conexao
 
 class LoginAdm:
     def __init__(self, janela):
@@ -29,7 +30,7 @@ class LoginAdm:
         self.login()
     
 
-    def login(self):
+    def login(self):        
         self.limpar_grid
         self.logo_path = "img/usuario.png"
         self.carregar_imagem()
@@ -54,7 +55,7 @@ class LoginAdm:
         self.ent_senha.grid(row=6, column=1)
         self.ent_senha.config(font=("Courier New", 28)) 
         
-        self.cpf_user = self.ent_usuario.get()
+        
 
         self.btn_logar = tk.Button(self.frame_central, text='Entrar', command=self.logar)
         self.btn_logar.grid(row=8, column=0, columnspan=2,pady=20)
@@ -71,14 +72,30 @@ class LoginAdm:
         
         
     def logar(self):
-        if self.ent_usuario.get() == '987654321':
+        self.cpf_user = self.ent_usuario.get()
+        self.password_user = self.ent_senha.get()
+        conn = criar_conexao()
+        cursor = conn.cursor()
+        sql_manager = f"SELECT cpf_manager, password_manager FROM manager WHERE cpf_manager={self.cpf_user} AND password_manager={self.password_user};"
+        cursor.execute(sql_manager)
+        resultado_manager = cursor.fetchall()
+        conn.close()
+        conn = criar_conexao()
+        cursor = conn.cursor()
+        sql_client = f"SELECT cpf_client, password_client FROM client WHERE cpf_client={self.cpf_user} AND password_client={self.password_user}"
+        cursor.execute(sql_client)
+        resultado_client = cursor.fetchall()
+        conn.close()
+        print(resultado_manager)
+        
+        if self.cpf_user and resultado_manager:
             print(1)
             self.inicio()
             #self.janela.destroy()
             # self.limpar_grid()
             # telaAdmin = LoginAdm()
             # telaAdmin.iniciarAdmin(self.janela)
-        else:
+        elif self.cpf_user and resultado_client:
             self.usuario()
             
 
@@ -419,7 +436,7 @@ class LoginAdm:
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
-        sql_listar_contas = 'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client FROM rent r, client c WHERE r.requester_rent=c.id_client;'
+        sql_listar_contas = 'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client FROM rent r, client c WHERE c.cpf_client==r.requester_rent;'
         dados = self.listar(sql_listar_contas)
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)
@@ -433,25 +450,34 @@ class LoginAdm:
         return resultado
     
     def aceitar(self):
+        self.selecao = self.tvw.selection()
+        self.seleciona = self.tvw.item(self.selecao, "values")
+        self.id = int(self.seleciona[0])
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("UPDATE rent SET status_rent='Aprovado' WHERE id_rent=1")
+        cursor.execute(f"UPDATE rent SET status_rent='Aprovado' WHERE id_rent={self.id}")
         banco.commit()
         banco.close()
         self.atualizar_rent()
     
     def negar(self):
+        self.selecao = self.tvw.selection()
+        self.seleciona = self.tvw.item(self.selecao, "values")
+        self.id = int(self.seleciona[0])
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("UPDATE rent SET status_rent='Negado' WHERE id_rent=1")
+        cursor.execute(f"UPDATE rent SET status_rent='Negado' WHERE id_rent={self.id}")
         banco.commit()
         banco.close()
         self.atualizar_rent()
         
     def devolvido(self):
+        self.selecao = self.tvw.selection()
+        self.seleciona = self.tvw.item(self.selecao, "values")
+        self.id = int(self.seleciona[0])
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        cursor.execute("UPDATE rent SET status_rent='Devolvido' WHERE id_rent=1")
+        cursor.execute(f"UPDATE rent SET status_rent='Devolvido' WHERE id_rent={self.id}")
         banco.commit()
         banco.close()
         self.atualizar_rent()
@@ -591,6 +617,14 @@ class LoginAdm:
         resultado = cursor.fetchall() 
         banco.close()
         return resultado
+    
+    def listar_pesquisa(self, sql,p):
+        banco = sqlite3.connect('libraryDB.db')
+        cursor = banco.cursor()
+        cursor.execute(sql, (p))
+        resultado = cursor.fetchall() 
+        banco.close()
+        return resultado
         
         
     def atualizar_agendamento(self):
@@ -702,14 +736,14 @@ class LoginAdm:
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
-        sql_listar_contas = 'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client, b.name_book FROM rent r, client c, book b WHERE r.requester_rent=c.id_client AND b.status_book=="Aprovado";'
+        sql_listar_contas = f'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client, b.name_book FROM rent r, client c, book b WHERE r.requester_rent={self.cpf_user} AND b.status_book=="Aprovado";'
         dados = self.listar(sql_listar_contas)
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)
         
     
     def pedir(self):
-        r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), 'pendente')
+        r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), self.cpf_user)
         
         
     def emprestimo(self):
@@ -764,15 +798,17 @@ class LoginAdm:
         btn_confirmar.grid(row=0, column=1, padx=150)
         
     def pesquisar(self):
+        
         self.texto_pesquisa = self.entry_pesquisa.get() 
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
-        sql_listar_contas = 'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client, b.name_book FROM rent r, client c, book b WHERE r.requester_rent=c.id_client AND b.status_book=="Aprovado" AND LIKE %{self.texto_pesquisa}%'
-        dados = self.listar(sql_listar_contas)
+        sql_listar_contas = 'SELECT name_book, author_book, gender_book FROM book WHERE status_book=? AND name_book LIKE ?'
+        print(self.texto_pesquisa)
+        dados = self.listar_pesquisa(sql_listar_contas, (True, f"%{self.texto_pesquisa}%"))
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)
-        
+            
     
         
 # janela = tk.Tk()

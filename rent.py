@@ -1,7 +1,7 @@
 import sqlite3
 
 class Rent:
-    def __init__(self, start, end, requester, status='PENDENTE'):
+    def __init__(self, start, end, requester, status='Pendente'):
         self._date_start = start
         self._date_end = end
         self._status = status
