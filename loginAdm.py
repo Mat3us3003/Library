@@ -205,7 +205,7 @@ class LoginAdm:
         self.images_tk = []
         for logos in self.logos:
             image = Image.open(logos)
-            image = image.resize((350, 350))
+            image = image.resize((300, 300))
             self.images_tk.append(ImageTk.PhotoImage(image))
 
     def exibir_imagens(self, frame):
@@ -215,7 +215,7 @@ class LoginAdm:
 
     
     def inicio(self):
-        
+        self.janela.title('Library')
         # self.janela.geometry('800x800')
         self.style = Style(theme="vapor") 
         
@@ -227,7 +227,7 @@ class LoginAdm:
         frame_conteudo.grid(row=0, column=0)
 
         # Load and display the images
-        self.logos = ["img/agendaa.png", "img/devolucao.png", "img/R.png"]
+        self.logos = ["img/cadastro.png", "img/devolucao.png", "img/R.png", "img/agendaa.png"]
         self.carregar_imagens()
         self.exibir_imagens(frame_conteudo)
 
@@ -235,11 +235,15 @@ class LoginAdm:
         self.btn_agendar = tk.Button(frame_conteudo, text='Cadastrar livro', font=("algerian", 30), command=self.cadastro_book)
         self.btn_agendar.grid(row=1, column=0, padx=10)
 
-        self.btn_devolver = tk.Button(frame_conteudo, text='Requisições', font=("algerian", 30), command=self.rent)
-        self.btn_devolver.grid(row=1, column=1, padx=10)
+        self.btn_requisi = tk.Button(frame_conteudo, text='Requisições', font=("algerian", 30), command=self.rent)
+        self.btn_requisi.grid(row=1, column=1, padx=10)
 
         self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30), command=self.prorrogar)
         self.btn_prorrogar.grid(row=1, column=2, pady=10)
+
+        self.btn_emprestimo = tk.Button(frame_conteudo, text='Empréstimo', font=("algerian", 30), command=self.emprestimo)
+        self.btn_emprestimo.grid(row=1, column=3, pady=10)
+
 
         # Criar o menu principal
         menu_principal = Menu(self.janela)
@@ -261,7 +265,7 @@ class LoginAdm:
 
         submenu_temas.add_radiobutton(label="Superhero", variable=self.tema_var, value="superhero", command=self.mudar_tema)
         
-        menu_principal.add_command(label="Sair", command=self.inicio)
+        menu_principal.add_command(label="Sair", command=self.login)
 
 
        
@@ -319,8 +323,8 @@ class LoginAdm:
         self.limpar_grid() 
         self.janela.title('Cadastro')
         self.img_path = "img/biblio.png"
-        self.carregar_img()
-        self.exibir_img()
+        self.carre_img()
+        self.exib_img()
 
 
         self.lbl_cadastro = tk.Label(self.frame_central, text='Cadastro')
@@ -359,11 +363,11 @@ class LoginAdm:
         self.btn_cadastrar_book.grid(row=0, column=0, pady=20, padx=10)
         self.btn_cadastrar_book.config(font=("algerian", 28))
 
-    def carregar_img(self):
+    def carre_img(self):
         self.img= Image.open(self.img_path)
         self.img = self.img.resize((100, 100)) 
 
-    def exibir_img(self):
+    def exib_img(self):
         self.img_tk = ImageTk.PhotoImage(self.img)
         self.label_img = tk.Label(self.frame_central, image=self.img_tk)
         self.label_img.grid(row=0, column=0, columnspan=2,)
@@ -398,12 +402,22 @@ class LoginAdm:
         
     def rent(self):
         self.limpar_grid()
+        self.janela.title('Requisições')
+        self.logo_path = "img/biblio.png"
+        self.carrega_imagem()
+        self.exibi_imagem()
+
+
+        self.lbl_rent = ttk.Label(self.frame_central, text='Requisições')
+        self.lbl_rent.grid(row=1, column=0, columnspan=2)
+        self.lbl_rent.config(font=("algerian", 35, "bold")) 
+
         scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle="warning-round")
-        scb_tabela.grid(row=0, column=1, sticky=tk.NS)
+        scb_tabela.grid(row=2, column=1, sticky=tk.NS)
 
         colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent')
         self.tvw = ttk.Treeview(self.frame_central, columns=colunas, height=5, show='headings',bootstyle='warning')
-        self.tvw.grid(row=0,column=0)
+        self.tvw.grid(row=2,column=0)
         #Cabeçalho
         self.tvw.heading('id', text='ID')
         self.tvw.heading('date_start', text='Início')
@@ -422,21 +436,28 @@ class LoginAdm:
 
         
         self.frm_botoes = tk.Frame(self.frame_central)
-        self.frm_botoes.grid(row=1, column=0)
+        self.frm_botoes.grid(row=3, column=0)
         
         self.btn_aceitar = tk.Button(self.frm_botoes, text='Aceitar', command=self.aceitar)
         self.btn_aceitar.grid(row=0, column=0, pady=20, padx=20)
-        self.btn_aceitar.config(font=("algerian", 20))
+        self.btn_aceitar.config(font=("algerian", 30))
         
         self.btn_negar = tk.Button(self.frm_botoes, text='Negar', command=self.negar)
         self.btn_negar.grid(row=0, column=1, padx=20)
-        self.btn_negar.config(font=("algerian", 20))
+        self.btn_negar.config(font=("algerian", 30))
         
         self.btn_devolvido = tk.Button(self.frm_botoes, text='Devolvido', command=self.devolvido)
         self.btn_devolvido.grid(row=0, column=2, padx=20)
-        self.btn_devolvido.config(font=("algerian", 20))
-        
-        
+        self.btn_devolvido.config(font=("algerian", 30))
+    def carrega_imagem(self):
+        self.logo = Image.open(self.logo_path)
+        self.logo = self.logo.resize((80, 80)) 
+
+    def exibi_imagem(self):
+        self.logo_tk = ImageTk.PhotoImage(self.logo)
+        self.label_logo = tk.Label(self.frame_central, image=self.logo_tk)
+        self.label_logo.grid(row=0, column=0, columnspan=2,)  
+    
     def atualizar_rent(self):
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
@@ -498,6 +519,10 @@ class LoginAdm:
         banco.commit()
         banco.close()
         self.atualizar_prorrogar()
+    
+ 
+
+
         
         
         
@@ -558,6 +583,7 @@ class LoginAdm:
         menu_principal.add_command(label="Sair", command=self.login)
 
 
+
     def sobre(self):
         self.limpar_grid()
         self.frame_central.pack()
@@ -596,7 +622,7 @@ class LoginAdm:
         self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
         
         # Criando o Scrollbar
-        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela = ttk.Scrollbar(self.frame_central)
         scb_tabela.grid(row=2, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
@@ -676,8 +702,8 @@ class LoginAdm:
         #self.janela.geometry('800x800')
         self.frame_central.pack()
         self.logo_path = "img/biblio.png"
-        self.carregar_imagem()
-        self.exibir_imagem()
+        self.carregar0_imagem()
+        self.exibir0_imagem()
     
 
         self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
@@ -685,7 +711,7 @@ class LoginAdm:
         self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
         
         # Criando o Scrollbar
-        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle='success-round')
         scb_tabela.grid(row=2, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
@@ -719,9 +745,24 @@ class LoginAdm:
         
     def prorrogar(self):
         self.limpar_grid()
+        self.janela.title('Prorrogar')
+        self.logo_path = "img/biblio.png"
+        self.carregar2_imagem()
+        self.exibir2_imagem()
+
+        self.lbl_pr= tk.Label(self.frame_central, text='Prorrogar')
+        self.lbl_pr.config(font=("algerian", 35))
+        self.lbl_pr.grid(row=1, column=0, columnspan=2, pady=15)  
+        
+
+        scb_prorrogar = ttk.Scrollbar(self.frame_central,bootstyle="warning-round")
+        scb_prorrogar.grid(row=2, column=1, sticky=tk.NS)
+
         colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent', 'name_book')
-        self.tvw = ttk.Treeview(self.frame_central, columns=colunas, height=5, show='headings')
-        self.tvw.grid(row=0,column=0)
+
+        self.tvw = ttk.Treeview(self.frame_central, columns=colunas, show='headings',bootstyle="warning")
+        self.tvw.grid(row=2,column=0)
+
         #Cabeçalho
         self.tvw.heading('id', text='ID')
         self.tvw.heading('date_start', text='Início')
@@ -729,6 +770,7 @@ class LoginAdm:
         self.tvw.heading('status_rent', text='Status')
         self.tvw.heading('requester_rent', text='Solicitante')
         self.tvw.heading('name_book', text='Livros')
+        self.tvw.config(height=25)
         #Colunas
         self.tvw.column('id')
         self.tvw.column('date_start')
@@ -738,21 +780,18 @@ class LoginAdm:
         self.tvw.column('name_book')
         #Linhas
         self.atualizar_prorrogar()
-        # #Barra de rolagem
-        # scb = ttk.Scrollbar(self.janela, orient=tk.VERTICAL,command=self.tvw.yview)
-        # scb.grid(row=0, column=1, sticky='ns')
-        # self.tvw.config(yscrollcommand=scb.set)
+
         
         self.frm_botoes = tk.Frame(self.frame_central)
-        self.frm_botoes.grid(row=1, column=0)
+        self.frm_botoes.grid(row=3, column=0)
         
         self.btn_aceitar = tk.Button(self.frm_botoes, text='Prorrogar', command=self.prorrogacao)
-        self.btn_aceitar.grid(row=0, column=1, pady=20, padx=10)
-        self.btn_aceitar.config(font=("algerian", 20))
+        self.btn_aceitar.grid(row=0, column=0, pady=20, padx=35)
+        self.btn_aceitar.config(font=("algerian", 30))
         
         self.btn_aceitar = tk.Button(self.frm_botoes, text='Devolver', command=self.devolver)
-        self.btn_aceitar.grid(row=0, column=0, pady=20, padx=10)
-        self.btn_aceitar.config(font=("algerian", 20))
+        self.btn_aceitar.grid(row=0, column=1, pady=20)
+        self.btn_aceitar.config(font=("algerian", 30))
         
         
         
@@ -768,7 +807,28 @@ class LoginAdm:
     
     def pedir(self):
         r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), self.cpf_user)
+        messagebox.askokcancel("Sucesso","Pedido realizado")
+
+
+
+    def carregar2_imagem(self):
+        self.logo = Image.open(self.logo_path)
+        self.logo = self.logo.resize((80, 80)) 
+
+    def exibir2_imagem(self):
+        self.logo_tk = ImageTk.PhotoImage(self.logo)
+        self.label_logo = tk.Label(self.frame_central, image=self.logo_tk)
+        self.label_logo.grid(row=0, column=0, columnspan=2,)
+
         
+    def carregar0_imagem(self):
+        self.logo = Image.open(self.logo_path)
+        self.logo = self.logo.resize((80, 80)) 
+
+    def exibir0_imagem(self):
+        self.logo_tk = ImageTk.PhotoImage(self.logo)
+        self.label_logo = tk.Label(self.frame_central, image=self.logo_tk)
+        self.label_logo.grid(row=0, column=0, columnspan=2,)
         
     def emprestimo(self):
         self.limpar_grid()
@@ -776,8 +836,8 @@ class LoginAdm:
         self.janela.geometry('800x800')
         self.frame_central.pack()
         self.logo_path = "img/biblio.png"
-        self.carregar_imagem()
-        self.exibir_imagem()
+        self.carregarr_imagem()
+        self.exibirr_imagem()
     
 
         self.lbl_agen = tk.Label(self.frame_central, text='Empréstimo')
@@ -794,7 +854,7 @@ class LoginAdm:
         self.btn_pesquisar.grid(row=2, column=2)  
         
         # Criando o Scrollbar
-        scb_tabela = tk.Scrollbar(self.frame_central)
+        scb_tabela = ttk.Scrollbar(self.frame_central,bootstyle='success-round')
         scb_tabela.grid(row=3, column=1, sticky=tk.NS)
 
         # Cria as colunas com lista
@@ -832,6 +892,15 @@ class LoginAdm:
         dados = self.listar_pesquisa(sql_listar_contas, (True, f"%{self.texto_pesquisa}%"))
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)
+        
+    def carregarr_imagem(self):
+        self.logoo = Image.open(self.logo_path)
+        self.logoo = self.logoo.resize((80, 80)) 
+
+    def exibirr_imagem(self):
+        self.logo_tk = ImageTk.PhotoImage(self.logoo)
+        self.label_logoo = tk.Label(self.frame_central, image=self.logo_tk)
+        self.label_logoo.grid(row=0, column=0, columnspan=2,)
             
     
         
