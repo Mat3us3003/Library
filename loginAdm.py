@@ -31,7 +31,7 @@ class LoginAdm:
     
 
     def login(self):        
-        self.limpar_grid
+        self.limpar_grid()
         self.logo_path = "img/usuario.png"
         self.carregar_imagem()
         self.exibir_imagem()
@@ -74,12 +74,14 @@ class LoginAdm:
     def logar(self):
         self.cpf_user = self.ent_usuario.get()
         self.password_user = self.ent_senha.get()
+        
         conn = criar_conexao()
         cursor = conn.cursor()
         sql_manager = f"SELECT cpf_manager, password_manager FROM manager WHERE cpf_manager={self.cpf_user} AND password_manager={self.password_user};"
         cursor.execute(sql_manager)
         resultado_manager = cursor.fetchall()
         conn.close()
+        
         conn = criar_conexao()
         cursor = conn.cursor()
         sql_client = f"SELECT cpf_client, password_client FROM client WHERE cpf_client={self.cpf_user} AND password_client={self.password_user}"
@@ -87,6 +89,7 @@ class LoginAdm:
         resultado_client = cursor.fetchall()
         conn.close()
         print(resultado_manager)
+        print(resultado_client)
         
         if self.cpf_user and resultado_manager:
             print(1)
@@ -235,7 +238,7 @@ class LoginAdm:
         self.btn_devolver = tk.Button(frame_conteudo, text='Requisições', font=("algerian", 30), command=self.rent)
         self.btn_devolver.grid(row=1, column=1, padx=10)
 
-        self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30))
+        self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30), command=self.prorrogar)
         self.btn_prorrogar.grid(row=1, column=2, pady=10)
 
         # Criar o menu principal
@@ -257,6 +260,8 @@ class LoginAdm:
         submenu_temas.add_radiobutton(label="Darkly", variable=self.tema_var, value="darkly", command=self.mudar_tema)
 
         submenu_temas.add_radiobutton(label="Superhero", variable=self.tema_var, value="superhero", command=self.mudar_tema)
+        
+        menu_principal.add_command(label="Sair", command=self.inicio)
 
 
        
@@ -481,6 +486,18 @@ class LoginAdm:
         banco.commit()
         banco.close()
         self.atualizar_rent()
+
+    
+    def devolver(self):
+        self.selecao = self.tvw.selection()
+        self.seleciona = self.tvw.item(self.selecao, "values")
+        self.id = int(self.seleciona[0])
+        banco = sqlite3.connect('libraryDB.db')
+        cursor = banco.cursor()
+        cursor.execute(f"UPDATE rent SET status_rent='Devolver' WHERE id_rent={self.id}")
+        banco.commit()
+        banco.close()
+        self.atualizar_prorrogar()
         
         
         
@@ -537,6 +554,8 @@ class LoginAdm:
 
         # Adicionar um item de menu "Sobre"
         menu_principal.add_command(label="Sobre", command=self.sobre)
+        
+        menu_principal.add_command(label="Sair", command=self.login)
 
 
     def sobre(self):
@@ -553,12 +572,13 @@ class LoginAdm:
     def prorrogacao(self):
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        self.new_date = datetime.today() + datetime.timedelta(days=7)
-        cursor.execute("UPDATE rent SET date_end={self.new_date} WHERE requester_rent = {cpf_user}")
+        self.new_date = datetime.date.today() + datetime.timedelta(days=7)
+        self.new_date = str(self.new_date)
+        print(type(self.new_date))
+        cursor.execute(f"UPDATE rent SET date_end={self.new_date} WHERE requester_rent = {self.cpf_user}")
         banco.commit()
         banco.close()
-        self.atualizar_rent()
-
+        self.atualizar_prorrogar()
 
 
     def agendamento(self):
@@ -727,6 +747,10 @@ class LoginAdm:
         self.frm_botoes.grid(row=1, column=0)
         
         self.btn_aceitar = tk.Button(self.frm_botoes, text='Prorrogar', command=self.prorrogacao)
+        self.btn_aceitar.grid(row=0, column=1, pady=20, padx=10)
+        self.btn_aceitar.config(font=("algerian", 20))
+        
+        self.btn_aceitar = tk.Button(self.frm_botoes, text='Devolver', command=self.devolver)
         self.btn_aceitar.grid(row=0, column=0, pady=20, padx=10)
         self.btn_aceitar.config(font=("algerian", 20))
         
@@ -736,7 +760,7 @@ class LoginAdm:
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
-        sql_listar_contas = f'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client, b.name_book FROM rent r, client c, book b WHERE r.requester_rent={self.cpf_user} AND b.status_book=="Aprovado";'
+        sql_listar_contas = f'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client FROM rent r INNER JOIN client c ON r.requester_rent = c.cpf_client WHERE r.requester_rent = {self.cpf_user};'
         dados = self.listar(sql_listar_contas)
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)

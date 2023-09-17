@@ -37,6 +37,9 @@ def criar_conexao():
                         PRIMARY KEY("id_rent" AUTOINCREMENT));''')
 
         #falta adicionar os livros
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Alienista', 'Machado de Assis', True, 'Literatura'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('Senhor do Aneis: Retorno do Rei', 'J.R.R. Tolkien', True, 'Aventura'))
 
         conn.commit()
         conn.close()
