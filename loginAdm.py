@@ -14,6 +14,7 @@ from rent import Rent
 from BD.conexao import criar_conexao
 
 class LoginAdm:
+    
     def __init__(self, janela):
         self.janela = janela
         # self.janela.geometry('800x800')
@@ -32,6 +33,7 @@ class LoginAdm:
 
     def login(self):        
         self.limpar_grid()
+        
         self.logo_path = "img/usuario.png"
         self.carregar_imagem()
         self.exibir_imagem()
@@ -67,6 +69,7 @@ class LoginAdm:
 
         self.logo = Image.open(self.logo_path)
         self.logo = self.logo.resize((200, 200))
+       
         
         
         
@@ -139,9 +142,9 @@ class LoginAdm:
         self.frm_botoes = tk.Frame(self.frame_central)
         self.frm_botoes.grid(row=9, column=0, columnspan=2)
 
-        self.btn_cadastrar = tk.Button(self.frm_botoes, text='Entrar',command=self.confirmar_client)
-        self.btn_cadastrar.grid(row=0, column=1, pady=20, padx=10)
-        self.btn_cadastrar.config(font=("algerian", 28))
+        self.btn_salvar = tk.Button(self.frm_botoes, text='Salvar',command=self.confirmar_client)
+        self.btn_salvar.grid(row=0, column=1, pady=20, padx=10)
+        self.btn_salvar.config(font=("algerian", 28))
 
         self.btn_voltar = tk.Button(self.frm_botoes, text='Voltar', command=self.login)
         self.btn_voltar.grid(row=0, column=0, pady=20, padx=10)
