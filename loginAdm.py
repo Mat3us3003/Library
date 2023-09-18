@@ -803,7 +803,6 @@ class LoginAdm:
     def pedir(self):
         r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), self.cpf_user)
         messagebox.askokcancel("Sucesso","Pedido realizado")
-        self.usuario()
 
 
 
