@@ -36,11 +36,29 @@ def criar_conexao():
                         "requester_rent"	INTEGER NOT NULL,
                         PRIMARY KEY("id_rent" AUTOINCREMENT));''')
 
-        #falta adicionar os livros
         cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Alienista', 'Machado de Assis', True, 'Literatura'))
         
         cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('Senhor do Aneis: Retorno do Rei', 'J.R.R. Tolkien', True, 'Aventura'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Caminho da Luz', 'Paulo Coelho', True, 'Autoajuda'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('A Divina Comédia', 'Dante Alighieri', True, 'Literatura'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('A Origem das Espécies', 'Charles Darwin', True, 'Ciências'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Pequeno Príncipe', 'Antoine de Saint-Exupéry', True, 'Literatura'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('A Metamorfose', 'Franz Kafka', True, 'Literatura'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('1984', 'George Orwell', True, 'Ficção Científica'))
 
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Guia do Mochileiro das Galáxias', 'Douglas Adams', True, 'Ficção Científica'))
+        
+        cursor.execute("INSERT INTO book (name_book, author_book, status_book, gender_book) VALUES(?,?,?,?)", ('O Código Da Vinci', 'Dan Brown', True, 'Ficção'))
+        
+        cursor.execute("INSERT INTO manager (name_manager, cpf_manager, password_manager, identificator_manager) VALUES(?,?,?,?)", ('Mateus', '16581239216', '123456', '555'))
+        
+        cursor.execute("INSERT INTO manager (name_manager, cpf_manager, password_manager, identificator_manager) VALUES(?,?,?,?)", ('Joceli', '27162748279', '654321', '555'))
         conn.commit()
         conn.close()
 

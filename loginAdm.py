@@ -152,7 +152,7 @@ class LoginAdm:
     def confirmar_client(self):
         if self.ent_nome.get() == '' or self.ent_cpf.get() == '' or self.ent_senha.get() == '':
             messagebox.askokcancel("Erro", "Preencha todos os campos!")
-            self.cadastrar_client()
+            self.cadastro()
         else:
             c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
             aviso = messagebox.askokcancel("Aviso", "Cadastro feito com sucesso!")
@@ -265,7 +265,7 @@ class LoginAdm:
 
         submenu_temas.add_radiobutton(label="Superhero", variable=self.tema_var, value="superhero", command=self.mudar_tema)
         
-        menu_principal.add_command(label="Sair", command=self.login)
+        menu_principal.add_command(label="Sair", command=self.inicio)
 
 
        
