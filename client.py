@@ -1,5 +1,4 @@
 import sqlite3
-import re
 from validate_docbr import CPF
 
 class Client:

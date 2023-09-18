@@ -30,7 +30,9 @@ class LoginAdm:
         self.login()
     
 
-    def login(self):        
+    def login(self):
+        self.frame_central = tk.Frame(janela)
+        self.frame_central.pack(expand=True)        
         self.limpar_grid()
         self.logo_path = "img/usuario.png"
         self.carregar_imagem()
@@ -77,29 +79,28 @@ class LoginAdm:
         
         conn = criar_conexao()
         cursor = conn.cursor()
-        sql_manager = f"SELECT cpf_manager, password_manager FROM manager WHERE cpf_manager={self.cpf_user} AND password_manager={self.password_user};"
+        sql_manager = f"SELECT cpf_manager, password_manager FROM manager WHERE cpf_manager='{self.cpf_user}' AND password_manager='{self.password_user}';"
         cursor.execute(sql_manager)
         resultado_manager = cursor.fetchall()
         conn.close()
         
         conn = criar_conexao()
         cursor = conn.cursor()
-        sql_client = f"SELECT cpf_client, password_client FROM client WHERE cpf_client={self.cpf_user} AND password_client={self.password_user}"
+        sql_client = f"SELECT cpf_client, password_client FROM client WHERE cpf_client='{self.cpf_user}' AND password_client='{self.password_user}'"
         cursor.execute(sql_client)
         resultado_client = cursor.fetchall()
         conn.close()
+        
         print(resultado_manager)
         print(resultado_client)
         
         if self.cpf_user and resultado_manager:
             print(1)
             self.inicio()
-            #self.janela.destroy()
-            # self.limpar_grid()
-            # telaAdmin = LoginAdm()
-            # telaAdmin.iniciarAdmin(self.janela)
         elif self.cpf_user and resultado_client:
             self.usuario()
+        else:
+            messagebox.askokcancel("Erro", "Usuário não encontrado!")
             
 
        
@@ -155,8 +156,13 @@ class LoginAdm:
             self.cadastro()
         else:
             c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
-            aviso = messagebox.askokcancel("Aviso", "Cadastro feito com sucesso!")
-            self.login()
+            if c.cpf:
+                aviso = messagebox.askokcancel("Parabens", "Cadastro feito com sucesso!")
+                self.login()
+            else:
+                aviso = messagebox.askokcancel("Erro", "CPF inválido!")
+                self.cadastro()
+            
             
         
        
@@ -179,6 +185,9 @@ class LoginAdm:
     #     self.frame_central = tk.Frame(self.janela)
     #     self.frame_central.pack(expand=True)
     #     self.inicio()
+    
+    def limpar_frm(self):
+        janela
         
             
     def limpar_grid(self):
@@ -518,12 +527,7 @@ class LoginAdm:
         cursor.execute(f"UPDATE rent SET status_rent='Devolver' WHERE id_rent={self.id}")
         banco.commit()
         banco.close()
-        self.atualizar_prorrogar()
-    
- 
-
-
-        
+        self.atualizar_prorrogar()        
         
         
         
@@ -543,7 +547,7 @@ class LoginAdm:
         frame_conteudo.grid(row=0, column=0)
 
         # Load and display the images
-        self.logos = ["img/agendaa.png", "img/devolucao.png", "img/R.png"]
+        self.logos = ["img/agendaa.png", "img/R.png"]
         self.carregar_imagens()
         self.exibir_imagens(frame_conteudo)
 
@@ -551,11 +555,8 @@ class LoginAdm:
         self.btn_agendar = tk.Button(frame_conteudo, text='Empréstimo', font=("algerian", 30), command=self.emprestimo)
         self.btn_agendar.grid(row=1, column=0, padx=10)
 
-        self.btn_devolver = tk.Button(frame_conteudo, text='Devolver', font=("algerian", 30))
-        self.btn_devolver.grid(row=1, column=1, padx=10)
-
-        self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30), command=self.prorrogar)
-        self.btn_prorrogar.grid(row=1, column=2, pady=10)
+        self.btn_prorrogar = tk.Button(frame_conteudo, text='Pedidos', font=("algerian", 30), command=self.prorrogar)
+        self.btn_prorrogar.grid(row=1, column=1, pady=10)
 
         # Criar o menu principal
         menu_principal = Menu(self.janela)
@@ -808,6 +809,7 @@ class LoginAdm:
     def pedir(self):
         r = Rent(datetime.date.today(), datetime.date.today() + datetime.timedelta(days=7), self.cpf_user)
         messagebox.askokcancel("Sucesso","Pedido realizado")
+        self.usuario()
 
 
 
