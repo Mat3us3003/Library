@@ -273,8 +273,6 @@ class LoginAdm:
         submenu_temas.add_radiobutton(label="Darkly", variable=self.tema_var, value="darkly", command=self.mudar_tema)
 
         submenu_temas.add_radiobutton(label="Superhero", variable=self.tema_var, value="superhero", command=self.mudar_tema)
-        
-        menu_principal.add_command(label="Sair", command=self.inicio)
 
 
        
@@ -580,8 +578,6 @@ class LoginAdm:
 
         # Adicionar um item de menu "Sobre"
         menu_principal.add_command(label="Sobre", command=self.sobre)
-        
-        menu_principal.add_command(label="Sair", command=self.login)
 
 
 
@@ -759,7 +755,7 @@ class LoginAdm:
         scb_prorrogar = ttk.Scrollbar(self.frame_central,bootstyle="warning-round")
         scb_prorrogar.grid(row=2, column=1, sticky=tk.NS)
 
-        colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent', 'name_book')
+        colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent')
 
         self.tvw = ttk.Treeview(self.frame_central, columns=colunas, show='headings',bootstyle="warning")
         self.tvw.grid(row=2,column=0)
@@ -770,7 +766,6 @@ class LoginAdm:
         self.tvw.heading('date_end', text='Final')
         self.tvw.heading('status_rent', text='Status')
         self.tvw.heading('requester_rent', text='Solicitante')
-        self.tvw.heading('name_book', text='Livros')
         self.tvw.config(height=25)
         #Colunas
         self.tvw.column('id')
@@ -778,7 +773,6 @@ class LoginAdm:
         self.tvw.column('date_end')
         self.tvw.column('status_rent')
         self.tvw.column('requester_rent')
-        self.tvw.column('name_book')
         #Linhas
         self.atualizar_prorrogar()
 
