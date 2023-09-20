@@ -31,9 +31,7 @@ class LoginAdm:
         self.login()
     
 
-    def login(self):
-        self.frame_central = tk.Frame(janela)
-        self.frame_central.pack(expand=True)        
+    def login(self):       
         self.limpar_grid()
         
         self.logo_path = "img/usuario.png"
@@ -154,17 +152,17 @@ class LoginAdm:
 
         
     def confirmar_client(self):
-        if self.ent_nome.get() == '' or self.ent_cpf.get() == '' or self.ent_senha.get() == '':
-            messagebox.askokcancel("Erro", "Preencha todos os campos!")
-            self.cadastro()
+        if self.ent_cpf.get() == '00000000000':
+            messagebox.askokcancel("Erro", "CPF inválido!")
         else:
-            c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
-            if c.cpf:
-                aviso = messagebox.askokcancel("Parabens", "Cadastro feito com sucesso!")
-                self.login()
-            else:
-                aviso = messagebox.askokcancel("Erro", "CPF inválido!")
+            if self.ent_nome.get() == '' or self.ent_cpf.get() == '' or self.ent_senha.get() == '':
+                messagebox.askokcancel("Erro", "Preencha todos os campos!")
                 self.cadastro()
+            else:
+                c = Client(self.ent_nome.get(), self.ent_cpf.get(), self.ent_senha.get())
+                if c.cpf:
+                    aviso = messagebox.askokcancel("Parabens", "Cadastro feito com sucesso!")
+                    self.login()
             
             
         
@@ -188,9 +186,7 @@ class LoginAdm:
     #     self.frame_central = tk.Frame(self.janela)
     #     self.frame_central.pack(expand=True)
     #     self.inicio()
-    
-    def limpar_frm(self):
-        janela
+
         
             
     def limpar_grid(self):
@@ -250,7 +246,7 @@ class LoginAdm:
         self.btn_requisi = tk.Button(frame_conteudo, text='Requisições', font=("algerian", 30), command=self.rent)
         self.btn_requisi.grid(row=1, column=1, padx=10)
 
-        self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30), command=self.prorrogar)
+        self.btn_prorrogar = tk.Button(frame_conteudo, text='Prorrogar', font=("algerian", 30), command=self.prorrogar_manager)
         self.btn_prorrogar.grid(row=1, column=2, pady=10)
 
         self.btn_emprestimo = tk.Button(frame_conteudo, text='Empréstimo', font=("algerian", 30), command=self.emprestimo)
@@ -397,6 +393,7 @@ class LoginAdm:
             messagebox.askokcancel("Erro", "Preencha todos os campos!")
             self.cadastro_book
         else:
+            messagebox.askokcancel("Parabéns", "Livro cadastrado com sucesso!")
             b = Book(self.ent_titulo.get(), self.ent_author.get(), self.cbx_gender.get())
             self.cadastro_book()
             
@@ -598,7 +595,7 @@ class LoginAdm:
     def prorrogacao(self):
         banco = sqlite3.connect('libraryDB.db')
         cursor = banco.cursor()
-        self.new_date = datetime.date.today() + datetime.timedelta(days=7)
+        self.new_date = datetime.date.today() + datetime.timedelta(days=8)
         self.new_date = str(self.new_date)
         print(self.new_date)
         cursor.execute(f"UPDATE rent SET date_end=? WHERE requester_rent = ?", (self.new_date, self.cpf_user))
@@ -618,7 +615,7 @@ class LoginAdm:
     
 
         self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
-        self.lbl_agen.config(font=("algerian", 35))
+        self.lbl_agen.config(font=("Courier New", 35))
         self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
         
         # Criando o Scrollbar
@@ -707,7 +704,7 @@ class LoginAdm:
     
 
         self.lbl_agen = tk.Label(self.frame_central, text='Agendamento')
-        self.lbl_agen.config(font=("algerian", 35))
+        self.lbl_agen.config(font=("Courier New", 35))
         self.lbl_agen.grid(row=1, column=0, columnspan=2, pady=15)  
         
         # Criando o Scrollbar
@@ -751,7 +748,7 @@ class LoginAdm:
         self.exibir2_imagem()
 
         self.lbl_pr= tk.Label(self.frame_central, text='Prorrogar')
-        self.lbl_pr.config(font=("algerian", 35))
+        self.lbl_pr.config(font=("Courier New", 35))
         self.lbl_pr.grid(row=1, column=0, columnspan=2, pady=15)  
         
 
@@ -792,12 +789,70 @@ class LoginAdm:
         self.btn_aceitar.config(font=("algerian", 30))
         
         
+    def prorrogar_manager(self):
+        self.limpar_grid()
+        self.janela.title('Prorrogar')
+        self.logo_path = "img/biblio.png"
+        self.carregar2_imagem()
+        self.exibir2_imagem()
+
+        self.lbl_pr= tk.Label(self.frame_central, text='Prorrogar')
+        self.lbl_pr.config(font=("Courier New", 35))
+        self.lbl_pr.grid(row=1, column=0, columnspan=2, pady=15)  
+        
+
+        scb_prorrogar = ttk.Scrollbar(self.frame_central,bootstyle="warning-round")
+        scb_prorrogar.grid(row=2, column=1, sticky=tk.NS)
+
+        colunas = ('id', 'date_start', 'date_end', 'status_rent', 'requester_rent')
+
+        self.tvw = ttk.Treeview(self.frame_central, columns=colunas, show='headings',bootstyle="warning")
+        self.tvw.grid(row=2,column=0)
+
+        #Cabeçalho
+        self.tvw.heading('id', text='ID')
+        self.tvw.heading('date_start', text='Início')
+        self.tvw.heading('date_end', text='Final')
+        self.tvw.heading('status_rent', text='Status')
+        self.tvw.heading('requester_rent', text='Solicitante')
+        self.tvw.config(height=25)
+        #Colunas
+        self.tvw.column('id')
+        self.tvw.column('date_start')
+        self.tvw.column('date_end')
+        self.tvw.column('status_rent')
+        self.tvw.column('requester_rent')
+        #Linhas
+        self.atualizar_prorrogar_manager()
+
+        
+        self.frm_botoes = tk.Frame(self.frame_central)
+        self.frm_botoes.grid(row=3, column=0)
+        
+        self.btn_aceitar = tk.Button(self.frm_botoes, text='Prorrogar', command=self.prorrogacao)
+        self.btn_aceitar.grid(row=0, column=0, pady=20, padx=35)
+        self.btn_aceitar.config(font=("algerian", 30))
+        
+        self.btn_aceitar = tk.Button(self.frm_botoes, text='Devolver', command=self.devolver)
+        self.btn_aceitar.grid(row=0, column=1, pady=20)
+        self.btn_aceitar.config(font=("algerian", 30))
+        
+        
         
     def atualizar_prorrogar(self):
         items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
         for i in items:
             self.tvw.delete(i)
         sql_listar_contas = f'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, c.name_client FROM rent r INNER JOIN client c ON r.requester_rent = c.cpf_client WHERE r.requester_rent = {self.cpf_user};'
+        dados = self.listar(sql_listar_contas)
+        for linha in dados:
+            self.tvw.insert('', tk.END, values=linha)
+            
+    def atualizar_prorrogar_manager(self):
+        items = self.tvw.get_children() #limpa o componente treeview antes de preencher com o conteúdo do BD
+        for i in items:
+            self.tvw.delete(i)
+        sql_listar_contas = f'SELECT r.id_rent, r.date_start, r.date_end, r.status_rent, m.name_manager FROM rent r INNER JOIN manager m ON r.requester_rent = m.cpf_manager WHERE r.requester_rent = {self.cpf_user};'
         dados = self.listar(sql_listar_contas)
         for linha in dados:
             self.tvw.insert('', tk.END, values=linha)
